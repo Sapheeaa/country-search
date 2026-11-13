@@ -16,14 +16,13 @@ export interface CountryCard {
   languages: string[];
 }
 
-export function mapCountryResponse(_raw: CountryRaw): CountryCard {
-  // Заглушка (stub) — возвращает пустые данные, чтобы тест упал на assert.
+export function mapCountryResponse(raw: CountryRaw): CountryCard {
   return {
-    name: '',
-    flag: '',
-    capital: '',
-    region: '',
-    population: 0,
-    languages: [],
+    name: raw.name,
+    flag: raw.flags.png ?? raw.flags.svg ?? '',
+    capital: raw.capital,
+    region: raw.region,
+    population: raw.population,
+    languages: raw.languages.map((item) => item.name),
   };
 }
