@@ -1,9 +1,35 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { searchCountries, HttpError } from './searchCountries';
 
 describe('searchCountries', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('выбрасывает TimeoutError, если запрос превышает лимит времени', async () => {
+    vi.useFakeTimers(); // Включаем фейковое время
+
+    // Мок fetch, который отклоняется, когда срабатывает signal
+    globalThis.fetch = vi.fn().mockImplementation((_url, options) => {
+      return new Promise((_resolve, reject) => {
+        options.signal?.addEventListener('abort', () => {
+          reject(options.signal.reason); // Возвращаем ту же ошибку, что и реальный fetch
+        });
+      });
+    }) as unknown as typeof fetch;
+
+    const controller = new AbortController();
+    // Передаем 5000 мс как таймаут (мы добавим его в функцию)
+    const promise = searchCountries('spain', controller.signal, 5000);
+
+    // Промотали время на 5000 мс, чтобы сработал таймаут
+    vi.advanceTimersByTime(5000);
+
+    // Проверяем, что выброшена ошибка с именем TimeoutError
+    await expect(promise).rejects.toHaveProperty('name', 'TimeoutError');
   });
 
   it('возвращает массив стран при успешном ответе (200 OK)', async () => {

@@ -8,7 +8,11 @@ export class HttpError extends Error {
   }
 }
 
-export async function searchCountries(query: string, signal: AbortSignal): Promise<CountryRaw[]> {
+export async function searchCountries(
+  query: string,
+  signal: AbortSignal,
+  _timeoutMs: number = 5000,
+): Promise<CountryRaw[]> {
   const url = `https://countries.dev/name/${encodeURIComponent(query)}`;
   const response = await fetch(url, { signal }); // результат сетевого запроса
   if (response.status === 404) {
