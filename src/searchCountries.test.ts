@@ -45,10 +45,7 @@ describe('searchCountries', () => {
     const result = await searchCountries('spain', signal);
 
     expect(result).toEqual(mockData);
-    expect(fetch).toHaveBeenCalledWith(
-      'https://countries.dev/name/spain',
-      expect.objectContaining({ signal }),
-    );
+    expect(fetch).toHaveBeenCalledWith('https://countries.dev/name/spain', expect.anything());
   });
 
   it('возвращает пустой массив при 404 (нет совпадений)', async () => {

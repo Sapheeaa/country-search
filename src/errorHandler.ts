@@ -1,11 +1,19 @@
+import { HttpError } from './searchCountries';
+
 export interface SearchErrorInfo {
   message: string;
   canRetry: boolean;
 }
 
-export function getSearchErrorInfo(_error: unknown): SearchErrorInfo | null {
-  // Заглушка (stub) — возвращает null для любой ошибки.
-  // Благодаря этому тест упадет на проверке (assert),
-  // а не из-за того, что функции не существует.
-  return null;
+export function getSearchErrorInfo(error: unknown): SearchErrorInfo | null {
+  if (error instanceof DOMException && error.name === 'AbortError') {
+    return null;
+  }
+  if (error instanceof DOMException && error.name === 'TimeoutError') {
+    return { message: 'Превышено время ожидания', canRetry: true };
+  }
+  if (error instanceof HttpError) {
+    return { message: `Ошибка сервера (${error.status})`, canRetry: true };
+  }
+  return { message: 'Ошибка сети', canRetry: true };
 }
