@@ -1,4 +1,4 @@
-import { HttpError } from './searchCountries';
+import { HttpError } from './searchCountries.js';
 
 export interface SearchErrorInfo {
   message: string;

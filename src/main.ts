@@ -1,7 +1,7 @@
-import { debounce } from './debounce';
-import { searchCountries } from './searchCountries';
-import { mapCountryResponse, type CountryCard } from './mapCountryResponse';
-import { getSearchErrorInfo } from './errorHandler';
+import { debounce } from './debounce.js';
+import { searchCountries } from './searchCountries.js';
+import { mapCountryResponse, type CountryCard } from './mapCountryResponse.js';
+import { getSearchErrorInfo } from './errorHandler.js';
 
 const app = document.createElement('div');
 app.className = 'app';
