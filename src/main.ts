@@ -148,6 +148,7 @@ input.addEventListener('input', (e) => {
   }
   if (query === '') {
     clearContent();
+    debouncedSearch('');
     return;
   }
   debouncedSearch(query);
